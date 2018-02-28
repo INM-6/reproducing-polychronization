@@ -1,0 +1,38 @@
+# Simulation Parameter
+simulation-params:
+    resolution: 1. # (ms)
+    synapse-update-interval: 1000
+    sim-time: 18000000. # (ms) 5 hours: 5 * 60 * 60 * 1000
+    data-path: data/NEST_model/
+    rec_mem: 0. # (ms)
+    rec_spikes: 10000. # (ms)
+# Network Parameter
+network-params:
+    connectivity:
+        type: generate
+        delay-distribution: uniform-non-random
+        delay-range: [1, 21] # excluding right boundary
+
+    plasticity:
+        synapse-model: stdp_izh_synapse
+        tau_syn_update_interval: 10000.
+        constant_additive_value: 0.01
+        reset_weight_change_after_update: False
+        Wmax: 10.
+        W_init: 6.
+        LTP: 0.1
+        LTD: -0.12
+
+
+
+    stimulus:
+        type: generate
+        distribution: original
+
+    initial-state:
+        type: generate
+        distribution: uniform
+        V_m-range: [-65, -55] # excluding right boundary
+
+
+

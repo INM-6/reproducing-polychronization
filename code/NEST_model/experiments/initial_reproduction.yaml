@@ -1,0 +1,27 @@
+# Simulation Parameter
+simulation-params:
+    resolution: 1. # (ms)
+    synapse-update-interval: 1000
+    sim-time: 18000000. # (ms) 5 hours: 5 * 60 * 60 * 1000
+    data-path: data/NEST_model/
+    rec_mem: 0. # (ms)
+    rec_spikes: 10000. # (ms)
+# Network Parameter
+network-params:
+    connectivity: 
+        type: reproduce
+        from-file: data/original_model/bitwise_reproduction/{rep}/connectivity.json
+
+    plasticity:
+        synapse-model: stdp_izh_naive_synapse
+
+    stimulus:
+        type: reproduce
+        from-file: data/original_model/bitwise_reproduction/{rep}/stim.dat
+
+    initial-state:
+        type: reproduce
+        from-file: data/original_model/bitwise_reproduction/{rep}/vuinit.dat
+
+
+

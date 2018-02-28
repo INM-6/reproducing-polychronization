@@ -1,0 +1,105 @@
+ruleorder: run_nest_reproduction > run_nest_model
+rule install_nest:
+    output:
+        expand('{nest_folder}/instl/bin/nest_vars.sh',nest_folder=NEST_SRC_DIR)
+    params:
+        nest_dir=NEST_SRC_DIR,
+    shell:
+        """
+        cd {params.nest_dir}
+        mkdir -p bld
+        mkdir -p instl
+        cd bld
+        cmake3 -DCMAKE_INSTALL_PREFIX:PATH={params.nest_dir}/instl -Dwith-python3=ON {params.nest_dir} -Dwith-mpi=ON
+        make -j8
+        make install
+        """
+rule collect_data:
+    input:
+        spikes=expand("{folder}/{{experiment}}/{{rep}}/{{mem_or_spk}}-{{gid,(1001|1002)}}-{threads}.{{ext,(dat|gdf)}}",folder=NEST_DATA_DIR,threads=range(NUM_THREADS)),
+    output:
+        spikes=expand("{folder}/{{experiment}}/{{rep}}/{{mem_or_spk}}-{{gid,(1001|1002)}}.{{ext,(dat|gdf)}}",folder=NEST_DATA_DIR),
+    shell:
+        """
+        cat {input} > {output}
+        sort -k2,2 -k1,1 -V {output} -o {output}
+        """
+
+rule run_nest_model:
+    output:
+        weights= "{folder}/{{experiment}}/{{rep}}/connectivity.json".format(folder=NEST_DATA_DIR),
+        spikes=expand("{folder}/{{experiment}}/{{rep}}/spikes-1001-{threads}.gdf",folder=NEST_DATA_DIR,threads=range(NUM_THREADS)),
+        membrane_potential=expand("{folder}/{{experiment}}/{{rep}}/membrane_potential-1002-{threads}.dat",folder=NEST_DATA_DIR,threads=range(NUM_THREADS)),
+
+    input:
+        model='{folder}/model.py'.format(folder=NEST_CODE_DIR),
+        conf='{folder}/experiments/{{experiment}}.yaml'.format(folder=NEST_CODE_DIR),
+        nest=rules.install_nest.output
+    threads: NUM_THREADS
+    log: 'logs/nest_{experiment}_{rep}.log'
+    #benchmark: "benchmarks/nest_{{experiment}}_{threads}.log".format(threads=NUM_THREADS)
+    shell:
+        """
+        source {{input.nest}}
+        python3 {folder}/model.py -c {{input.conf}} -r {{wildcards.rep}} -n {{threads}} &>{{log}}
+        """.format(folder=NEST_CODE_DIR)
+
+
+rule run_nest_reproduction:
+    input:
+        model='{folder}/model.py'.format(folder=NEST_CODE_DIR),
+        nest=rules.install_nest.output,
+        repro= expand('{folder}/bitwise_reproduction/{{rep}}/connectivity.json',folder=IZHI_DATA_DIR),
+        stim=rules.original_bitwise_reproduction.output.stim,
+        init=rules.original_bitwise_reproduction.output.init,
+        conf='{folder}/experiments/{{experiment}}_reproduction.yaml'.format(folder=NEST_CODE_DIR)
+
+    output:
+        mem=expand('{folder}/{{experiment}}_reproduction/{{rep}}/membrane_potential-1002-{threads}.dat',folder=NEST_DATA_DIR,threads=range(NUM_THREADS)),
+        spikes=expand("{folder}/{{experiment}}_reproduction/{{rep}}/spikes-1001-{threads}.gdf",folder=NEST_DATA_DIR,threads=range(NUM_THREADS)),
+        weights=expand("{folder}/{{experiment}}_reproduction/{{rep}}/connectivity.json",folder=NEST_DATA_DIR)
+    priority:1
+    threads: NUM_THREADS
+    #benchmark: "benchmarks/nest_{{experiment}}_reproduction_{threads}.log".format(threads=NUM_THREADS)
+    log: 'logs/nest_{experiment}_reproduction_{rep}.log'
+    shell:
+        """
+        source {{input.nest}}
+        python3 {folder}/model.py -c {{input.conf}}  -r {{wildcards.rep}} -n {{threads}} &>{{log}}
+        """.format(folder=NEST_CODE_DIR)
+
+
+
+rule find_groups_nest:
+    threads: 48
+    input:
+        connectivity="{folder}/{experiment}/{rep}/connectivity.json",
+        conf='{nest_folder}/experiments/{{experiment}}.yaml'.format(nest_folder=NEST_CODE_DIR),
+
+    output:
+        groups="{folder}/{experiment}/{rep}/groups_nest.json",
+        stats="{folder}/{experiment}/{rep}/stats.json"
+    log: 'logs/find_groups_nest_{experiment}_{rep}.log'
+
+    shell:
+        """
+        source {rules.install_nest.output}
+        python3 code/analysis/find_polychronous_groups_nest.py -i {input.connectivity} -n {threads}  -c {input.conf} -o {output.groups} -s {output.stats}&> {log}
+        """
+
+rule compare_STDP:
+    output:
+        weights="{folder}/{{experiment}}/stdp_window.json".format(folder=NEST_DATA_DIR),
+        sim="{folder}/{{experiment}}/stdp_simulation.json".format(folder=NEST_DATA_DIR),
+    input:
+        model='{folder}/stdp_window.py'.format(folder=ANA_DIR),
+        conf='{folder}/experiments/{{experiment}}.yaml'.format(folder=NEST_CODE_DIR),
+        nest=rules.install_nest.output
+    threads: NUM_THREADS
+    log: 'logs/nest_{experiment}.log'
+    shell:
+        """
+        source {input.nest}
+        python {input.model} -c {input.conf} -o {output.weights} -p {output.sim} &>{log}
+        """
+

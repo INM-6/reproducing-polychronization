@@ -1,0 +1,18 @@
+{
+    "__default__": {
+        "time": "24:00:00",
+        "N": 1,
+        "n":1,
+        "mem":"8G",
+        "name"      : "{wildcards}.{rule}"
+
+    },
+      "find_groups_nest": {
+        "time": "24:00:00",
+        "n":48,
+        "N": 1,
+        "name"      : "{wildcards}.{rule}"
+
+    }
+
+}
