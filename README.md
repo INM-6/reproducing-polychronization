@@ -10,9 +10,9 @@ using [NEST](http://nest-simulator.org/).
 
 To run the original model, the NEST implementation of the model, the analysis, the creation of the figures and the compiling of the manuscript run the following commands:
 
-git clone git@github.com:weidel-p/Re-Polychronization-Computation-With-Spikes.git
+git clone git@github.com:INM-6/reproducing-polychronization.git
 
-cd Re-Polychronization-Computation-With-Spikes
+cd reproducing-polychronization
 
 git submodule init
 
