@@ -6,7 +6,8 @@ simulation-params:
     data-path: data/NEST_model/
     rec_mem: 0. # (ms)
     rec_spikes: 10000. # (ms)
-    neuron-integration-steps: 1
+    neuron-integration-steps: 10
+
 # Network Parameter
 network-params:
     connectivity:
@@ -16,13 +17,13 @@ network-params:
 
     plasticity:
         synapse-model: stdp_izh_synapse
-        tau_syn_update_interval: 100000.
+        tau_syn_update_interval: 10000.
         constant_additive_value: 0.01
         reset_weight_change_after_update: False
         Wmax: 10.
         W_inh: -5.
         W_init: 6.
-        LTP: 0.10
+        LTP: 0.1
         LTD: -0.12
 
     stimulus:

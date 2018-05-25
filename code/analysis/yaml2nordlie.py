@@ -23,7 +23,7 @@ def begin_table(experiment):
               
               \\begin{minipage}{\\linewidth}
               \\centering
-              \\includegraphics[width=\\textwidth]{figures/dynamic_plot_""" + experiment + """.pdf}
+              \\includegraphics[width=\\textwidth]{figures/dynamic_plot_"""+experiment+""".pdf}
               \\vspace{1em}
 
               \\setlength{\\columnwidthleft}{0.4\\textwidth}
@@ -50,10 +50,10 @@ def end_section():
 
 def end_table(caption):
     return """\\vspace{1em}
-              """ + caption + """
+              """+caption+"""
               \\end{minipage}
            """
-
+   
 
 labels = ["A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K"]
 folder = "../NEST_model/experiments"
@@ -97,9 +97,9 @@ for fn in fns:
 
                 table += end_section()
 
-        table += end_table("Parameters for experiment " +
-                           fn.split('.')[0].replace('_', ' '))
+        table += end_table("Parameters for experiment " + fn.split('.')[0].replace('_', ' '))
 
     with open("nordlie.tex", "a+") as f:
         f.writelines(table)
         f.flush()
+

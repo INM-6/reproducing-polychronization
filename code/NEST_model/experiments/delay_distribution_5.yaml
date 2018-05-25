@@ -6,6 +6,7 @@ simulation-params:
     data-path: data/NEST_model/
     rec_mem: 0. # (ms)
     rec_spikes: 10000. # (ms)
+    neuron-integration-steps: 1
 # Network Parameter
 network-params:
     connectivity:
@@ -19,6 +20,7 @@ network-params:
         constant_additive_value: 0.01
         reset_weight_change_after_update: False
         Wmax: 10.
+        W_inh: -5.
         W_init: 6.
         LTP: 0.10
         LTD: -0.12

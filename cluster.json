@@ -3,16 +3,29 @@
         "time": "24:00:00",
         "N": 1,
         "n":1,
-        "mem":"8G",
+        "mem":"32G",
         "name"      : "{wildcards}.{rule}"
 
     },
       "find_groups_nest": {
-        "time": "24:00:00",
+        "time": "72:00:00",
+        "n":48,
+        "N": 1,
+        "name"      : "{wildcards}.{rule}"
+
+    },
+      "find_groups_nest_random": {
+        "time": "72:00:00",
+        "n":48,
+        "N": 1,
+        "name"      : "{wildcards}.{rule}"
+
+    },
+      "find_groups_nest_random_EE": {
+        "time": "72:00:00",
         "n":48,
         "N": 1,
         "name"      : "{wildcards}.{rule}"
 
     }
-
 }

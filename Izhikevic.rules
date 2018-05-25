@@ -41,7 +41,7 @@ rule compile_reformat:
 rule run_poly_spnet:
     input:
         '{folder}/poly_spnet'.format(folder=IZHI_EXEC_DIR),
-        rules.original_bitwise_reproduction.output
+#        rules.original_bitwise_reproduction.output
     output:
         spikes=expand('{folder}/spikes.dat',folder=IZHI_DATA_DIR),
         weights=expand('{folder}/all.dat',folder=IZHI_DATA_DIR),

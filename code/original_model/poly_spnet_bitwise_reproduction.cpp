@@ -790,9 +790,9 @@ int main(int argc, char **argv){
 	initialize();
 
 
-    fidx = fopen("stim.dat","a");
-    fvu = fopen("vu.dat","a");
-    fs = fopen("spikes.dat","a");
+    fidx = fopen("stim.dat","w");
+    fvu = fopen("vu.dat","w");
+    fs = fopen("spikes.dat","w");
 //    fssd = fopen("ssd.dat","a");
     int max_sec=18000;
 

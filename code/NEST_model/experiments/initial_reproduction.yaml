@@ -6,6 +6,8 @@ simulation-params:
     data-path: data/NEST_model/
     rec_mem: 0. # (ms)
     rec_spikes: 10000. # (ms)
+    neuron-integration-steps: 1
+
 # Network Parameter
 network-params:
     connectivity: 
@@ -14,6 +16,11 @@ network-params:
 
     plasticity:
         synapse-model: stdp_izh_naive_synapse
+        Wmax: 10.
+        W_inh: -5.
+        W_init: 6.
+        LTP: 0.1
+        LTD: -0.12
 
     stimulus:
         type: reproduce
