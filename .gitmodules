@@ -1,0 +1,5 @@
+[submodule "code/nest/nest-simulator"]
+	path = code/nest/nest-simulator
+	url = https://github.com/weidel-p/nest-simulator.git
+	branch = feature/stdp_izh_connection
+
