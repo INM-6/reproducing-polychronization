@@ -110,7 +110,7 @@ rule find_groups_nest:
     output:
         groups="{folder}/{experiment}/{rep}/groups_nest.json",
         stats="{folder}/{experiment}/{rep}/stats.json"
-    log: 'logs/find_groups_nest_{experiment}_{rep}.log'
+    log: 'logs/{folder}/find_groups_nest_{experiment}_{rep}.log'
     priority: 50
 
     shell:

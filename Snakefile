@@ -118,7 +118,7 @@ rule find_groups:
     input:
         connectivity="{folder}/{experiment}/{rep}/connectivity.json",
         program=rules.compile_find_polychronous_groups.output,
-    log: 'logs/find_groups_{experiment}_{rep}.log'
+    log: 'logs/{folder}/find_groups_{experiment}_{rep}.log'
     shell:
         '{input.program} {input.connectivity} {output} &>{log} || true'
 
@@ -149,7 +149,7 @@ rule calc_stats:
         "{folder}/{experiment}/{rep}/stats_orig.json"
     input:
         groups="{folder}/{experiment}/{rep}/groups.json",
-    log: 'logs/calculate_stats_{experiment}_{rep}.log'
+    log: 'logs/{folder}/calculate_stats_{experiment}_{rep}.log'
     shell:
         'python {ANA_DIR}/gather_stats.py -g {{input.groups}} -o {{output}} &>{{log}}'.format(ANA_DIR=ANA_DIR)
 
